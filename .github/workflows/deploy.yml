@@ -25,6 +25,7 @@ jobs:
           script: |
             export NVM_DIR="$HOME/.nvm"
             source "$NVM_DIR/nvm.sh"
+            export PATH="$PATH:/home/isaias/.local/share/pnpm"
             cd /home/isaias/projects/section-25_nest-backend
             git pull origin main
             npm ci

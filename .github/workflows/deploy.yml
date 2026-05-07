@@ -1,0 +1,33 @@
+name: Deploy de prueba en producción (backend)
+
+on:
+  push:
+    branches:
+      - main
+    workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # Step 1
+      - name: Checkout del codigo
+        uses: actions/checkout@v6
+
+      # Step 2
+      - name: Deploy to production
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            export NVM_DIR="$HOME/.nvm"
+            source "$NVM_DIR/nvm.sh"
+            cd /home/isaias/projects/section-25_nest-backend
+            git pull origin main
+            npm ci
+            npm run build
+            npm ci --omit=dev
+            pm2 restart auth-api
